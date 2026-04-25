@@ -758,6 +758,9 @@ questionCard.addEventListener("click", (event) => {
   const button = event.target.closest("[data-answer]");
   if (!button) return;
 
+  if (state.isAdvancing) return;
+  state.isAdvancing = true;
+
   const idea = currentIdea();
   const values = getIdeaState(idea);
   const answer = button.dataset.answer;
@@ -768,12 +771,21 @@ questionCard.addEventListener("click", (event) => {
   if (answer === "wanted" && values.status === "activa") values.status = "en-idea";
   if (answer === "none") values.status = "no-iniciada";
 
-  if (state.currentIndex < activeIdeas().length - 1) {
-    state.currentIndex += 1;
-  } else {
-    state.showResult = true;
-  }
-  render();
+  questionCard.querySelectorAll(".answer-button").forEach((item) => {
+    item.classList.remove("is-selected", "is-confirming");
+    item.disabled = true;
+  });
+  button.classList.add("is-selected", "is-confirming");
+
+  setTimeout(() => {
+    if (state.currentIndex < activeIdeas().length - 1) {
+      state.currentIndex += 1;
+    } else {
+      state.showResult = true;
+    }
+    state.isAdvancing = false;
+    render();
+  }, 420);
 });
 
 document.querySelector("#prevQuestion").addEventListener("click", () => {
