@@ -719,6 +719,17 @@ h1 {
   color: var(--brand-red);
 }
 
+.wizard-card.result-mode .wizard-actions .ghost-button:last-child {
+  border-color: white;
+  background: white;
+  color: var(--brand-red);
+  box-shadow: none;
+}
+
+.wizard-card.result-mode .wizard-actions .ghost-button:last-child:hover {
+  box-shadow: 0 10px 22px rgba(29, 29, 31, 0.12);
+}
+
 .wizard-actions {
   display: flex;
   justify-content: space-between;
