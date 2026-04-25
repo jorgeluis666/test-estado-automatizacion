@@ -431,6 +431,7 @@ const toast = document.querySelector("#toast");
 const heroProgress = document.querySelector("#heroProgress");
 const heroProgressLabel = document.querySelector("#heroProgressLabel");
 const areaRoadmap = document.querySelector("#areaRoadmap");
+const whatsappUrl = "https://wa.me/51937409733?text=Quisiera%20automatizar%20mi%20empresa.";
 
 function allIdeas() {
   return Object.entries(areas).flatMap(([areaKey, area]) =>
@@ -542,7 +543,7 @@ function renderResult() {
 
   document.querySelector("#prevQuestion").disabled = false;
   document.querySelector("#prevQuestion").textContent = "Editar respuestas";
-  document.querySelector("#skipQuestion").textContent = "Reiniciar";
+  document.querySelector("#skipQuestion").textContent = "Agenda tu reunión";
 }
 
 function renderQuestion() {
@@ -814,12 +815,7 @@ document.querySelector("#skipQuestion").addEventListener("click", () => {
   }
 
   if (state.showResult) {
-    state.selections = {};
-    state.currentIndex = 0;
-    state.showResult = false;
-    state.selectedAreas = [];
-    state.phase = "select";
-    render();
+    window.open(whatsappUrl, "_blank", "noopener");
     return;
   }
 
