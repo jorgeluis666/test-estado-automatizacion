@@ -450,6 +450,7 @@ function activeIdeas() {
 function getIdeaState(idea) {
   if (!state.selections[idea.id]) {
     state.selections[idea.id] = {
+      answered: false,
       done: false,
       wanted: false,
       status: "no-iniciada",
@@ -605,10 +606,12 @@ function renderQuestion() {
 
 function renderSummary() {
   const ideas = activeIdeas();
+  const answeredCount = ideas.filter((idea) => getIdeaState(idea).answered).length;
   const selectedDone = ideas.filter((idea) => getIdeaState(idea).done);
   const selectedWanted = ideas.filter((idea) => getIdeaState(idea).wanted && !getIdeaState(idea).done);
   const scores = getScores(ideas);
   const gap = Math.max(0, scores.potentialPercent - scores.currentPercent);
+  const completionPercent = ideas.length ? Math.round((answeredCount / ideas.length) * 100) : 0;
 
   doneCount.textContent = selectedDone.length;
   wantedCount.textContent = selectedWanted.length;
@@ -619,8 +622,8 @@ function renderSummary() {
 
   currentCopy.textContent = `${scores.currentPercent}% de madurez según las automatizaciones que ya tienes.`;
   potentialCopy.textContent = `${scores.potentialPercent}% si desarrollas las ideas que marcaste como deseadas.`;
-  heroProgress.style.width = `${scores.potentialPercent}%`;
-  heroProgressLabel.textContent = `${scores.potentialPercent}% completado`;
+  heroProgress.style.width = `${completionPercent}%`;
+  heroProgressLabel.textContent = `${completionPercent}% completado`;
   gapValue.textContent = gap;
 
   if (gap >= 35) {
@@ -652,7 +655,7 @@ function renderAreaRoadmap() {
       const scopedIdeas = area.ideas.map((idea) => ({ ...idea, areaKey: key, areaTitle: area.title }));
       const answered = scopedIdeas.filter((idea) => {
         const values = getIdeaState(idea);
-        return values.done || values.wanted || values.status !== "no-iniciada";
+        return values.answered;
       }).length;
       return `
         <div class="area-step ${key === activeArea ? "is-current" : ""}">
@@ -767,6 +770,7 @@ questionCard.addEventListener("click", (event) => {
 
   values.done = answer === "done";
   values.wanted = answer === "wanted";
+  values.answered = true;
   if (answer === "done") values.status = "activa";
   if (answer === "wanted" && values.status === "activa") values.status = "en-idea";
   if (answer === "none") values.status = "no-iniciada";

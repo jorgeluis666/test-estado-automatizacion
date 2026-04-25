@@ -641,6 +641,7 @@ h1 {
   border-color: rgba(255, 255, 255, 0.35);
   background: transparent;
   color: white;
+  overflow: hidden;
 }
 
 .result-hero span,
@@ -657,9 +658,11 @@ h1 {
   display: block;
   margin-bottom: 12px;
   color: white;
-  font-size: clamp(3rem, 6vw, 5.8rem);
+  max-width: 100%;
+  font-size: clamp(2.65rem, 5vw, 4.45rem);
   font-weight: 760;
-  line-height: 0.95;
+  line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .result-hero p {
