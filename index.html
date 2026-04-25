@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checklist de Automatización</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark">LR</div>
+        <div class="brand-text">
+          <span>Lima Retail</span>
+          <strong>Data Driven Marketing</strong>
+        </div>
+      </div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="#">Home</a>
+        <a href="#">Páginas web</a>
+        <a href="#">Facebook Ads</a>
+        <a href="#">Google Ads</a>
+        <a href="#">Portafolio</a>
+        <a href="#">Blog</a>
+        <a href="#">Herramientas</a>
+      </nav>
+      <a class="contact-button" href="#">Contáctanos</a>
+    </header>
+
+    <main class="app-shell">
+      <section class="workspace">
+        <section class="hero-layout">
+          <div class="hero-copy">
+            <p class="eyebrow">Suite de Optimización Digital</p>
+            <h1>Checklist de Automatización</h1>
+            <p class="intro-copy">
+              Revisa ideas de automatización por área, marca cuáles ya tienes y cuáles quisieras implementar.
+              Al final verás el estado actual de tu empresa y el nivel al que podría llegar.
+            </p>
+            <div class="diagnostic-progress">
+              <div>
+                <strong>Avance del diagnóstico</strong>
+                <span id="heroProgressLabel">0% completado</span>
+              </div>
+              <div class="progress-track hero-track">
+                <span id="heroProgress"></span>
+              </div>
+              <div class="screen-reader-stats" aria-hidden="true">
+                <strong id="currentLevel">Manual</strong>
+                <strong id="potentialLevel">Manual</strong>
+                <strong id="doneCount">0</strong>
+                <strong id="wantedCount">0</strong>
+                <span id="potentialCopy"></span>
+              </div>
+              <div class="area-roadmap is-hidden" id="areaRoadmap" aria-label="Áreas del diagnóstico"></div>
+              <button class="reset-link" id="resetButton" type="button">Reiniciar diagnóstico</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="diagnostic-card wizard-card">
+          <div class="panel-heading">
+            <div>
+              <span id="areaIcon" class="area-icon" aria-hidden="true">◆</span>
+              <div>
+                <p class="card-kicker" id="areaTitle">Ventas</p>
+                <h2>¿Qué automatizaciones tienes o quisieras implementar?</h2>
+              </div>
+            </div>
+            <p id="areaDescription">Ideas de automatización para ordenar y acelerar el seguimiento comercial.</p>
+          </div>
+
+          <div class="wizard-progress" aria-label="Progreso de preguntas">
+            <span id="questionCounter">Pregunta 1 de 24</span>
+            <div class="progress-track">
+              <span id="questionProgress"></span>
+            </div>
+          </div>
+
+          <article class="question-card" id="questionCard" aria-live="polite"></article>
+
+          <div class="wizard-actions">
+            <button class="ghost-button" id="prevQuestion" type="button">Anterior</button>
+            <button class="ghost-button" id="skipQuestion" type="button">Omitir</button>
+          </div>
+        </section>
+
+        <section class="maturity-board" aria-label="Estado de automatización">
+          <article class="maturity-card current">
+            <span class="metric-label">Madurez actual</span>
+            <div class="progress-track">
+              <span id="currentProgress"></span>
+            </div>
+            <p id="currentCopy">Marca las automatizaciones que ya tienes para calcular tu punto de partida.</p>
+          </article>
+          <article class="maturity-card potential">
+            <span class="metric-label">Madurez potencial</span>
+            <div class="progress-track">
+              <span id="potentialProgress"></span>
+            </div>
+            <p>Comparación entre lo implementado hoy y lo que la empresa quiere desarrollar.</p>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <aside class="insights-panel">
+            <section class="score-card">
+              <div class="score-ring" aria-label="Brecha de automatización">
+                <span id="gapValue">0</span>
+                <small>pts</small>
+              </div>
+              <div>
+                <h2 id="gapTitle">Sin brecha detectada</h2>
+                <p id="gapCopy">Marca lo que tienes y lo que quisieras tener para ver cuánto podría avanzar la empresa.</p>
+              </div>
+            </section>
+
+            <section class="area-status">
+              <h2>Estado por área</h2>
+              <div id="areaStatusList" class="area-status-list"></div>
+            </section>
+
+            <section class="recommendations">
+              <div class="section-title">
+                <h2>Ideas que quiere desarrollar</h2>
+                <button class="text-button" id="exportButton" type="button">Exportar</button>
+              </div>
+              <ol id="wishlist" class="wishlist">
+                <li>Selecciona “Lo quiero” en las ideas que te interesan.</li>
+              </ol>
+            </section>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <h2>Síguenos:</h2>
+          <div class="social-row">
+            <span>f</span>
+            <span>ig</span>
+            <span>in</span>
+            <span>▶</span>
+            <span>rss</span>
+          </div>
+        </div>
+        <div>
+          <h2>Servicios:</h2>
+          <ul>
+            <li>Agencia Google Ads</li>
+            <li>Agencia Facebook Ads</li>
+            <li>Diseño de Página Web</li>
+            <li>Desarrollo de Dashboard</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Consultorías:</h2>
+          <ul>
+            <li>1 a 1 Planificación de Empresa</li>
+            <li>1 a 1 Facebook Ads</li>
+            <li>1 a 1 Google Ads</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Auditorías:</h2>
+          <ul>
+            <li>Auditoría SEO</li>
+            <li>Auditoría Cuenta y Reporte Google Ads</li>
+          </ul>
+        </div>
+      </div>
+      <p>Política de privacidad | Legal | GDPR | © 2026 Lima Retail</p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Resumen copiado</div>
+    <script src="app.js"></script>
+  </body>
+</html>
