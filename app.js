@@ -408,7 +408,7 @@ const maturityLabels = {
 };
 
 const maturityNames = {
-  1: "Nivel 1 - Manual / BÃ¡sico",
+  1: "Nivel 1 - Manual / Básico",
   2: "Nivel 2 - Procesos Estandarizados",
   3: "Nivel 3 - Automatizado",
   4: "Nivel 4 - Inteligente / Orquestado",
@@ -437,35 +437,24 @@ const answerOptions = [
     key: "integrated",
     level: 4,
     label: "Integrado y optimizado",
-    detail: "Conectado con sistemas y mejoras periÃ³dicas.",
+    detail: "Conectado con sistemas y mejoras periódicas.",
   },
 ];
 
-const taskList = document.querySelector("#taskList");
 const questionCard = document.querySelector("#questionCard");
 const questionCounter = document.querySelector("#questionCounter");
 const questionProgress = document.querySelector("#questionProgress");
 const areaTitle = document.querySelector("#areaTitle");
 const areaDescription = document.querySelector("#areaDescription");
 const areaIcon = document.querySelector("#areaIcon");
-const currentLevel = document.querySelector("#currentLevel");
-const potentialLevel = document.querySelector("#potentialLevel");
-const currentProgress = document.querySelector("#currentProgress");
-const potentialProgress = document.querySelector("#potentialProgress");
-const currentCopy = document.querySelector("#currentCopy");
-const potentialCopy = document.querySelector("#potentialCopy");
-const doneCount = document.querySelector("#doneCount");
-const wantedCount = document.querySelector("#wantedCount");
-const gapValue = document.querySelector("#gapValue");
-const gapTitle = document.querySelector("#gapTitle");
-const gapCopy = document.querySelector("#gapCopy");
-const areaStatusList = document.querySelector("#areaStatusList");
-const wishlist = document.querySelector("#wishlist");
-const toast = document.querySelector("#toast");
 const heroProgress = document.querySelector("#heroProgress");
 const heroProgressLabel = document.querySelector("#heroProgressLabel");
 const areaRoadmap = document.querySelector("#areaRoadmap");
-const whatsappUrl = "https://wa.me/51937409733?text=Quisiera%20automatizar%20mi%20empresa.";
+const whatsappUrl =
+  "https://wa.me/51937409733?text=" +
+  encodeURIComponent(
+    "Quisiera agendar una reunión para conversar sobre el desarrollo de automatizaciones personalizadas para mi empresa.",
+  );
 
 function allIdeas() {
   return Object.entries(areas).flatMap(([areaKey, area]) =>
@@ -545,13 +534,13 @@ function answeredStats(ideas = activeIdeas()) {
 function dimensionForIdea(idea) {
   const tag = `${idea.type} ${idea.areaKey}`.toLowerCase();
   if (/integraci|crm|inventario|datos|bi|control|dashboard|analytics|fuentes/.test(tag)) {
-    return "IntegraciÃ³n de Sistemas";
+    return "Integración de Sistemas";
   }
-  if (/score|segment|insight|anÃ¡lisis|priorizaci|riesgo|ia/.test(tag)) {
+  if (/score|segment|insight|análisis|priorizaci|riesgo|ia/.test(tag)) {
     return "Inteligencia / IA aplicada";
   }
   if (/cultura|capacitaci|experiencia|soporte|helpdesk|rrhh/.test(tag)) {
-    return "GestiÃ³n del Cambio";
+    return "Gestión del Cambio";
   }
   return "Eficiencia Operativa";
 }
@@ -559,20 +548,23 @@ function dimensionForIdea(idea) {
 function getDimensionScores(ideas = activeIdeas()) {
   const dimensions = [
     "Eficiencia Operativa",
-    "IntegraciÃ³n de Sistemas",
+    "Integración de Sistemas",
     "Inteligencia / IA aplicada",
-    "GestiÃ³n del Cambio",
+    "Gestión del Cambio",
   ];
 
-  return dimensions.map((dimension) => {
-    const scoped = ideas.filter((idea) => dimensionForIdea(idea) === dimension);
-    const total = scoped.length * 4;
-    const current = scoped.reduce((sum, idea) => sum + getIdeaState(idea).level, 0);
-    return {
-      dimension,
-      percent: total ? Math.round((current / total) * 100) : 0,
-    };
-  });
+  return dimensions
+    .map((dimension) => {
+      const scoped = ideas.filter((idea) => dimensionForIdea(idea) === dimension);
+      const total = scoped.length * 4;
+      const current = scoped.reduce((sum, idea) => sum + getIdeaState(idea).level, 0);
+      return {
+        dimension,
+        count: scoped.length,
+        percent: total ? Math.round((current / total) * 100) : 0,
+      };
+    })
+    .filter((d) => d.count > 0);
 }
 
 function topWantedIdeas() {
@@ -588,8 +580,6 @@ function topWantedIdeas() {
 function renderResult() {
   const ideas = activeIdeas();
   const scores = getScores(ideas);
-  const done = ideas.filter((idea) => getIdeaState(idea).level >= 3);
-  const wanted = ideas.filter((idea) => getIdeaState(idea).answered && getIdeaState(idea).level < idea.maturity);
   const nextIdeas = topWantedIdeas();
   const dimensions = getDimensionScores(ideas);
   const currentLabel = maturityNames[scores.currentLevel] || maturityLabels[scores.currentLevel];
@@ -606,12 +596,6 @@ function renderResult() {
       <span>Estado potencial</span>
       <strong>${maturityLabels[scores.potentialLevel]}</strong>
       <p>Tu empresa esta hoy en ${currentLabel} y podria llegar a ${potentialLabel} si desarrolla las automatizaciones sugeridas.</p>
-    </div>
-    <div class="result-metrics">
-      <div><span>Actual</span><strong>${scores.currentPercent}%</strong></div>
-      <div><span>Potencial</span><strong>${scores.potentialPercent}%</strong></div>
-      <div><span>Consistentes</span><strong>${done.length}</strong></div>
-      <div><span>Brechas</span><strong>${wanted.length}</strong></div>
     </div>
     <div class="result-dimensions">
       ${dimensions
@@ -639,7 +623,8 @@ function renderResult() {
 
   document.querySelector("#prevQuestion").disabled = false;
   document.querySelector("#prevQuestion").textContent = "Editar respuestas";
-  document.querySelector("#skipQuestion").textContent = "Agenda tu reunión";
+  document.querySelector("#skipQuestion").innerHTML =
+    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Agenda tu reunión</span>';
 }
 
 function renderQuestion() {
@@ -698,42 +683,9 @@ function renderQuestion() {
 }
 
 function renderSummary() {
-  const ideas = activeIdeas();
-  const stats = answeredStats(ideas);
-  const selectedDone = ideas.filter((idea) => getIdeaState(idea).level >= 3);
-  const selectedWanted = ideas.filter((idea) => getIdeaState(idea).answered && getIdeaState(idea).level < idea.maturity);
-  const scores = getScores(ideas);
-  const gap = Math.max(0, scores.potentialPercent - scores.currentPercent);
-
-  doneCount.textContent = selectedDone.length;
-  wantedCount.textContent = selectedWanted.length;
-  currentLevel.textContent = maturityLabels[scores.currentLevel];
-  potentialLevel.textContent = maturityLabels[scores.potentialLevel];
-  currentProgress.style.width = `${scores.currentPercent}%`;
-  potentialProgress.style.width = `${scores.potentialPercent}%`;
-
-  currentCopy.textContent = `${scores.currentPercent}% de madurez según las automatizaciones que ya tienes.`;
-  potentialCopy.textContent = `${scores.potentialPercent}% si desarrollas las ideas que marcaste como deseadas.`;
-  heroProgress.style.width = `${stats.percent}%`;
-  heroProgressLabel.textContent = `${stats.percent}% completado`;
-  gapValue.textContent = gap;
-
-  if (gap >= 35) {
-    gapTitle.textContent = "Gran salto posible";
-    gapCopy.textContent = "Las automatizaciones deseadas podrían mover a la empresa a un nivel claramente superior.";
-  } else if (gap >= 15) {
-    gapTitle.textContent = "Mejora relevante";
-    gapCopy.textContent = "Hay una brecha concreta entre lo que ya existe y lo que convendría desarrollar.";
-  } else if (gap > 0) {
-    gapTitle.textContent = "Avance incremental";
-    gapCopy.textContent = "Las ideas marcadas ayudan a pulir el sistema actual sin cambiarlo por completo.";
-  } else {
-    gapTitle.textContent = "Sin brecha detectada";
-    gapCopy.textContent = "Marca lo que tienes y lo que quisieras tener para ver cuánto podría avanzar la empresa.";
-  }
-
-  renderAreaStatus();
-  renderWishlist(selectedWanted);
+  const heroPercent = state.showResult ? 100 : answeredStats().percent;
+  heroProgress.style.width = `${heroPercent}%`;
+  heroProgressLabel.textContent = `${heroPercent}% completado`;
   renderAreaRoadmap();
 }
 
@@ -745,10 +697,12 @@ function renderAreaRoadmap() {
     .filter(([key]) => state.phase === "select" || selected.has(key))
     .map(([key, area]) => {
       const scopedIdeas = area.ideas.map((idea) => ({ ...idea, areaKey: key, areaTitle: area.title }));
-      const answered = scopedIdeas.filter((idea) => {
-        const values = getIdeaState(idea);
-        return values.answered;
-      }).length;
+      const answered = state.showResult
+        ? scopedIdeas.length
+        : scopedIdeas.filter((idea) => {
+            const values = getIdeaState(idea);
+            return values.answered;
+          }).length;
       return `
         <div class="area-step ${key === activeArea ? "is-current" : ""}">
           <span>${area.title}</span>
@@ -795,42 +749,6 @@ function renderAreaSelection() {
   document.querySelector("#prevQuestion").textContent = "Anterior";
   document.querySelector("#skipQuestion").textContent = selected.size ? "Empezar test" : "Selecciona un área";
   document.querySelector("#skipQuestion").disabled = selected.size === 0;
-}
-
-function renderAreaStatus() {
-  areaStatusList.innerHTML = Object.entries(areas)
-    .map(([key, area]) => {
-      const scopedIdeas = area.ideas.map((idea) => ({ ...idea, areaKey: key, areaTitle: area.title }));
-      const scores = getScores(scopedIdeas);
-      return `
-        <div class="area-status-row">
-          <div class="area-status-top">
-            <strong>${area.title}</strong>
-            <span>${scores.currentPercent}% → ${scores.potentialPercent}%</span>
-          </div>
-          <div class="dual-bar">
-            <span class="now"><i style="width: ${scores.currentPercent}%"></i></span>
-            <span class="future"><i style="width: ${scores.potentialPercent}%"></i></span>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function renderWishlist(selectedWanted) {
-  const ordered = selectedWanted
-    .sort((a, b) => b.maturity - a.maturity)
-    .slice(0, 8);
-
-  wishlist.innerHTML = ordered.length
-    ? ordered
-        .map(
-          (idea) =>
-            `<li><strong>${idea.name}</strong><br>${idea.areaTitle} · ${idea.type} · ${idea.outcome}</li>`,
-        )
-        .join("")
-    : "<li>Completa el diagnóstico para ver brechas prioritarias.</li>";
 }
 
 function render() {
@@ -928,26 +846,6 @@ document.querySelector("#resetButton").addEventListener("click", () => {
   state.selectedAreas = [];
   state.phase = "select";
   render();
-});
-
-document.querySelector("#exportButton").addEventListener("click", async () => {
-  const ideas = activeIdeas();
-  const scores = getScores(ideas);
-  const done = ideas.filter((idea) => getIdeaState(idea).level >= 3);
-  const wanted = ideas.filter((idea) => getIdeaState(idea).answered && getIdeaState(idea).level < idea.maturity);
-  const lines = wanted.map((idea) => {
-    const values = getIdeaState(idea);
-    return `- ${idea.name} (${idea.areaTitle}): ${idea.outcome}. Estado: ${values.status}`;
-  });
-  const summary = `Checklist de Automatizacion\n\nEstado actual: ${maturityLabels[scores.currentLevel]} (${scores.currentPercent}%)\nEstado potencial: ${maturityLabels[scores.potentialLevel]} (${scores.potentialPercent}%)\nAutomatizaciones consistentes: ${done.length}\nBrechas prioritarias: ${wanted.length}\n\nIdeas sugeridas:\n${lines.join("\n") || "- Ninguna seleccionada"}`;
-
-  try {
-    await navigator.clipboard.writeText(summary);
-    toast.classList.add("is-visible");
-    setTimeout(() => toast.classList.remove("is-visible"), 1800);
-  } catch {
-    alert(summary);
-  }
 });
 
 render();
