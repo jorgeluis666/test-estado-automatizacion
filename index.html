@@ -8,11 +8,8 @@
     <link rel="canonical" href="https://limaretail.com/test-automatizacion-procesos/" />
     <script>
       // Si NO está dentro de iframe, redirige a la versión embebida (con header/footer del sitio).
-      // Si sí está en iframe, marca el <html> para que el CSS aplique layout natural (sin alturas locked al viewport).
       if (window.self === window.top) {
         window.location.replace("https://limaretail.com/test-automatizacion-procesos/");
-      } else {
-        document.documentElement.classList.add("is-embedded");
       }
     </script>
     <style>
@@ -451,16 +448,6 @@ h1 {
   .workspace { display: block; height: auto; }
   .diagnostic-card { max-width: 680px; margin: 0 auto; }
 }
-
-/* ── Layout cuando se carga embebido en un iframe (Divi) ─────────
-   Quita las restricciones de altura locked al viewport para que el
-   contenido fluya natural y el auto-resize funcione sin loops. */
-.is-embedded body { height: auto; overflow: auto; }
-.is-embedded .app-shell { height: auto; min-height: 0; padding: 24px; overflow: visible; }
-.is-embedded .workspace { height: auto; }
-.is-embedded .wizard-card { max-height: none; }
-.is-embedded .wizard-card.result-mode { max-height: none; }
-.is-embedded .wizard-card .question-card { overflow-y: visible; }
 @media (max-width: 760px) {
   .app-shell { padding: 32px 16px; }
   h1 { font-size: 2.55rem; }
@@ -981,52 +968,6 @@ document.querySelector("#resetButton").addEventListener("click", () => {
 });
 
 render();
-
-/* ── Auto-resize del iframe (same-origin direct DOM) ─────────────
-   Como app y página WordPress viven en limaretail.com, el iframe
-   se ajusta a sí mismo tocando window.frameElement.style.height.
-   Bypassa postMessage → bypassa el "Delay JS" de WP Rocket.       */
-(function () {
-  let lastH = 0, pending = false;
-  function getH() {
-    const container = document.querySelector(".app-shell") || document.body;
-    const rect = container.getBoundingClientRect();
-    return Math.ceil(rect.bottom + (window.scrollY || 0));
-  }
-  function applyHeight(h) {
-    try {
-      if (window.frameElement) {
-        window.frameElement.style.height = h + "px";
-        return true;
-      }
-    } catch (e) { /* cross-origin */ }
-    return false;
-  }
-  function send() {
-    pending = false;
-    const h = getH();
-    if (h > 100 && Math.abs(h - lastH) > 1) {
-      lastH = h;
-      if (!applyHeight(h)) {
-        window.parent.postMessage({ type: "app-resize", height: h }, "*");
-      }
-    }
-  }
-  function schedule() {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(send);
-  }
-  window.addEventListener("load", function () {
-    schedule();
-    [150, 400, 900, 1800, 3500].forEach((t) => setTimeout(schedule, t));
-  });
-  window.addEventListener("resize", schedule);
-  if (window.ResizeObserver) new ResizeObserver(schedule).observe(document.documentElement);
-  document.addEventListener("input", schedule, true);
-  document.addEventListener("change", schedule, true);
-  document.addEventListener("click", () => setTimeout(schedule, 500), true);
-})();
     </script>
   </body>
 </html>
